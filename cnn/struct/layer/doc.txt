@@ -1,0 +1,4 @@
+cnn/struct/layer/
+
+cnn/struct/layer_module.h의 struct cnn_Layer를 각 레이어의 특성에 맞게 생성하는 코드가 있는 폴더입니다.
+

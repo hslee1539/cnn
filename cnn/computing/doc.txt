@@ -1,0 +1,3 @@
+cnn/struct/layer/function/computing
+
+실질적인 연산을 하는 함수들을 모아 논 폴더입니다.
