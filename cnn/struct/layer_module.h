@@ -20,9 +20,10 @@ struct cnn_Layer{
     // TODO: 정리하자!
     struct cnn_UpdateList*  updateList;
     struct cnn_ExtraData*   extra;
+    /// inLayer가 하나인 경우 이 레이어와 수평적 관계를 가집니다. 두개 이상인 경우, 트리 구조가 되며, 
     struct cnn_Layer **     inLayer;
     int                     inLayer_size;
-    struct cnn_Layer **     outLayer;
+    struct cnn_Layer **     outLayer;   
     int                     outLayer_size;
 
 
@@ -41,11 +42,16 @@ struct cnn_Layer{
 };
 
 ///신경망을 만듭니다.
-struct cnn_Layer*   cnn_create_layer                (char *name, int inLayer_size,int outLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update);
+struct cnn_Layer    *cnn_create_layer               (char *name, int inLayer_size,int outLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update);
 ///레이어를 깊이 반환합니다.
 int                 cnn_release_layer_deep          (struct cnn_Layer *layer);
+//입력 레이어를 추가합니다.
+//struct cnn_Layer    *cnn_layer_add_inLayer          (struct cnn_Layer *left, struct cnn_Layer *right);
+
 int                 cnn_layer_forward               (struct cnn_Layer *layer, int index, int max_index);
 int                 cnn_layer_backward              (struct cnn_Layer *layer, int index, int max_index);
 int                 cnn_layer_initForward           (struct cnn_Layer *layer);
 int                 cnn_layer_initBackward          (struct cnn_Layer *layer);
 int                 cnn_layer_update                (struct cnn_Layer *layer, struct cnn_Optimizer *optimizer, int index, int max_index);
+int                 cnn_layer_link                  (struct cnn_Layer *layer, struct cnn_Layer *source);
+struct cnn_Layer    *cnn_layer_getTerminalInLayer

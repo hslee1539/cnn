@@ -1,7 +1,7 @@
 #include <malloc.h>
 #include "./optimizer_module.h"
 
-struct cnn_Optimizer* cnn_create_optimizer(float learning_rate, cnn_optimizer_fpUpdate update){
+struct cnn_Optimizer* cnn_create_optimizer(float learning_rate, cnn_optimizer_callback_update update){
     struct cnn_Optimizer* newOptimizer = malloc(sizeof(struct cnn_Optimizer));
     newOptimizer->update = update;
     newOptimizer->learning_rate = learning_rate;

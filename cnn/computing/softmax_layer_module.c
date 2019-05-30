@@ -21,12 +21,11 @@ void cnn_comput_softmax_crossentropy_layer_forward(struct Tensor* x, struct Tens
         }
     }
 }
-void cnn_comput_softmax_crossentropy_layer_backward(struct Tensor* dout, struct Tensor* out, struct Tensor* table, struct Tensor* dx, int index, int max_index){
+void cnn_comput_softmax_crossentropy_layer_backward(struct Tensor *out, struct Tensor *table, struct Tensor *dx, int index, int max_index){
     int dx_index = index * dx->size / max_index;
     int dx_max_index = (index + 1) * dx->size / max_index;
 
     for(; dx_index < dx_max_index; dx_index++){
-        dx->scalas[dx_index] = (out->scalas[dx_index] - table->scalas[dx_index]) * dout->scalas[dx_index / dout->size];
+        dx->scalas[dx_index] = (out->scalas[dx_index] - table->scalas[dx_index]);
     }
-
 }

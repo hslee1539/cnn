@@ -23,6 +23,7 @@ struct Tensor* tensor_create_nonstruct(float *scalas, int size, int *shapes, int
     out->size = size;
     return out;
 }
+
 struct Tensor* tensor_create_nonstruct_deep(float *scalas, int size, int *shapes, int dim){
     struct Tensor* out = malloc(sizeof(struct Tensor));
     out->scalas = malloc(sizeof(float) * size);
@@ -35,6 +36,7 @@ struct Tensor* tensor_create_nonstruct_deep(float *scalas, int size, int *shapes
     memcpy(out->shapes, shapes, dim * sizeof(int));
     return out;
 }
+
 struct Tensor* tensor_create_values_deep(int *shapes, int dim, float value){
     int size = 1;
     for(int d = 0; d < dim; d++){
@@ -62,7 +64,7 @@ struct Tensor* tensor_create(){
     newTensor->information = tensor_INFROMATION_SCALAS_NEED_FREE | tensor_INFROMATION_SHAPES_NEED_FREE;
 
     newTensor->scalas[0] = 0;
-    newTensor->shapes[0] = 1;
+    newTensor->shapes[0] = 0;
     newTensor->dim = 1;
     newTensor->size = 1;
     return newTensor;

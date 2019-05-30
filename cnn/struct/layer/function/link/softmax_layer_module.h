@@ -2,7 +2,6 @@
 
 #include "./../../../layer_module.h"
 
-// TODO loss값을 추가하자!
 
 void cnn_softmax_crossentropy_layer_createInnorData(struct cnn_Layer* layer);
 void cnn_softmax_crossentropy_layer_releaseInnorData(struct cnn_Layer* layer);

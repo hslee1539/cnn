@@ -31,7 +31,7 @@ struct Tensor* tensor_create_nonstruct(float *scalas, int size, int *shapes, int
 struct Tensor* tensor_create_nonstruct_deep(float *scalas, int size, int *shapes, int dim);
 /// 해당 값으로 객체를 만듭니다.
 struct Tensor* tensor_create_values_deep(int *shapes, int dim, float value);
-/// 원소가 0인 1차원 백터를 가지는 가지는 1차원 텐서를 만듭니다.
+/// 0값을 가지는 스칼라를 만듭니다.
 struct Tensor* tensor_create();
 ///해당 값으로 객체를 만듭니다. shapes의 경우, 참조하고, scalas는 새롭게 할당되어 만들어 집니다.
 struct Tensor* tensor_create_value(int *shapes, int dim, float value);

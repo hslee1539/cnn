@@ -1,0 +1,181 @@
+from import_lib import lib
+from tensor.main_module import Tensor
+from cnn.struct.updatelist_module import UpdateList, UpdateSet
+from cnn.struct.extradata_module import ExtraData
+from cnn.struct.optimizer_module import Optimizer
+from ctypes import Structure, c_int, POINTER, c_float, c_char_p, c_void_p, CFUNCTYPE
+
+callback_init = CFUNCTYPE(c_int, c_void_p)
+callback_computing = CFUNCTYPE(c_int, c_void_p, c_int, c_int)
+callback_update = CFUNCTYPE(c_int, c_void_p, Optimizer, c_int, c_int)
+
+class _Layer(Structure):
+    _fields_ = [
+        ('name', c_char_p),
+        ('out', Tensor),
+        ('dx', Tensor),
+        ('updateList', UpdateList),
+        ('extra', ExtraData),
+        ('inLayer', POINTER(c_void_p)),
+        ('inLayer_size', c_int),
+        ('outLayer', POINTER(c_void_p)),
+        ('outLayer_size', c_int),
+        ('forward', callback_computing),
+        ('backward', callback_computing),
+        ('initForward', callback_init),
+        ('initBackward', callback_init),
+        ('release', callback_init),
+        ('update', callback_update)
+        ]
+
+def _getName(self):
+    return self.contents.name
+
+def _setName(self, value):
+    self.contents.name = value
+
+def _getOut(self):
+    return self.contents.out
+
+def _setOut(self, value):
+    self.contents.out = value
+
+def _getDx(self):
+    return self.contents.dx
+
+def _setDx(self, value):
+    self.contents.dx = value
+
+def _getUpdateList(self):
+    return self.contents.updateList
+
+def _setUpdateList(self, value):
+    self.contents.updateList = value
+
+def _getExtra(self):
+    return self.contents.extra
+
+def _setExtra(self, value):
+    self.contents.extra = value
+
+def _getInLayer(self):
+    return self.contents.inLayer
+
+def _setInLayer(self, value):
+    self.contents.inLayer = value
+
+def _getInLayerSize(self):
+    return self.contents.inLayer_size
+
+def _setInLayerSize(self, value):
+    self.contents.inLayer_size = value
+
+def _getOutLayer(self):
+    return self.contents.outLayer
+
+def _setOutLayer(self, value):
+    self.contents.outLayer = value
+
+def _getOutLayerSize(self):
+    return self.contents.outLayer_size
+
+def _setOutLayerSize(self, value):
+    self.contents.outLayer_size = value
+
+def _getForward(self):
+    return self.contents.forward
+
+def _setForward(self, value):
+    self.contents.forward = value
+
+def _getBackward(self):
+    return self.contents.backward
+
+def _setBackawrd(self, value):
+    self.contents.backwrad = value
+
+def _getInitForward(self):
+    return self.contents.initForward
+
+def _setInitForward(self, value):
+    self.contents.initForward = value
+
+def _getInitBackward(self):
+    return self.contents.initBackward
+
+def _setInitBackward(self, value):
+    self.contents.initBackward = value
+
+def _getRelease(self):
+    return self.contents.release
+
+def _setRelease(self, value):
+    self.contents.release = value
+
+def _getUpdate(self):
+    return self.contents.update
+
+def _setUpdate(self, value):
+    self.contents.update = value
+
+def _create(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update):
+    return lib.cnn_create_layer(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update)
+
+def _release_deep(self):
+    return lib.cnn_release_layer_deep(self)
+
+def _forward(self, index, max_index):
+    return lib.cnn_layer_forward(self, index, max_index)
+
+def _backward(self, index, max_index):
+    return lib.cnn_layer_backward(self, index, max_index)
+
+def _initForward(self):
+    return lib.cnn_layer_initForward(self)
+
+def _initBackward(self):
+    return lib.cnn_layer_initBackward(self)
+
+def _update(self, optimizer, index, max_index):
+    return lib.cnn_layer_update(self, optimizer, index, max_index)
+
+lib.cnn_create_layer.argtypes = (c_char_p, c_int, c_int, callback_computing, callback_computing, callback_init, callback_init, callback_init, callback_update)
+lib.cnn_create_layer.restype = POINTER(_Layer)
+lib.cnn_release_layer_deep.argtypes = [POINTER(_Layer)]
+lib.cnn_release_layer_deep.restype = c_int
+lib.cnn_layer_forward.argtypes = [POINTER(_Layer), c_int, c_int]
+lib.cnn_layer_forward.restype = c_int
+lib.cnn_layer_backward.argtypes = (POINTER(_Layer), c_int, c_int)
+lib.cnn_layer_backward.restype = c_int
+lib.cnn_layer_initForward.argtypes = [POINTER(_Layer)]
+lib.cnn_layer_initForward.restype = c_int
+lib.cnn_layer_initBackward.argtypes = [POINTER(_Layer)]
+lib.cnn_layer_initBackward.restype = c_int
+lib.cnn_layer_update.argtypes = (POINTER(_Layer), Optimizer, c_int, c_int)
+lib.cnn_layer_update.restype = c_int
+
+Layer = POINTER(_Layer)
+Layer.__doc__ = " cnn_Layer 구조체의 포인터에 프로퍼티와 메소드를 추가한 클래스입니다."
+Layer.create = staticmethod(_create)
+Layer.release = _release_deep
+Layer.forward = _forward
+Layer.backward = _backward
+Layer.initForward = _initForward
+Layer.initBackward = _initBackward
+Layer.update = _update
+
+Layer.name = property(_getName, _setName)
+Layer.out = property(_getOut, _setOut)
+Layer.dx = property(_getDx, _setDx)
+Layer.updateList = property(_getUpdateList, _setUpdateList)
+Layer.extra = property(_getExtra, _setExtra)
+Layer.inLayer = property(_getInLayer, _setInLayer)
+Layer.inLayer_size = property(_getInLayerSize, _setInLayerSize)
+Layer.outLayer = property(_getOutLayer, _setOutLayer)
+Layer.outLayer_size = property(_getOutLayerSize, _setOutLayerSize)
+Layer._forward = property(_getForward, _setForward)
+Layer._backward = property(_getBackward, _setBackawrd)
+Layer._initForward = property(_getInitForward, _setInitForward)
+Layer._initBackward = property(_getInitBackward, _setInitBackward)
+Layer._release = property(_getRelease, _setRelease)
+Layer._update = property(_getUpdate, _setUpdate)
