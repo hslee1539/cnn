@@ -30,7 +30,7 @@ int cnn_conv3d_layer_initForward(struct cnn_Layer *layer){
 int cnn_conv3d_layer_initBackward(struct cnn_Layer *layer){
     if(layer->dx->shapes[0] != CNN_LAYER_DOUT(layer)->shapes[0]){
         tensor_release_deep(layer->dx);
-        layer->dx = cnn_create_conv3d_layer_out(CNN_LAYER_X(layer), CNN_LAYER_FILTER(layer)->value, CNN_CONV3D_LAYER_STRIDE(layer), CNN_CONV3D_LAYER_PAD(layer));
+        layer->dx = tensor_create_struct_deep(CNN_LAYER_X(layer));
     }
     return 0;
 }
@@ -45,6 +45,7 @@ int cnn_conv3d_layer_createInnerData(struct cnn_Layer *layer, struct Tensor *fil
     CNN_CONV3D_LAYER_PADDING(layer) = padding;
     return 0;
 }
+
 int cnn_conv3d_layer_releaseInnerData(struct cnn_Layer *layer){
     cnn_release_updatelist_deep(layer->updateList);
     cnn_release_extradata_deep(layer->extra);

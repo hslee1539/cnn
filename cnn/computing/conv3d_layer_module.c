@@ -4,7 +4,7 @@
 #define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
 
 struct Tensor *cnn_create_conv3d_layer_out(struct Tensor *x, struct Tensor *filter, int stride, int pad){
-    int shape[4] = {x->shapes[0], filter->shapes[0], (x->shapes[2] + 2 * pad - filter->shapes[2]) / stride + 1, (x->shapes[3] + 2 * pad - filter->shapes[3]) / stride + 1};
+    long long shape[4] = {x->shapes[0], filter->shapes[0], (x->shapes[2] + 2 * pad - filter->shapes[2]) / stride + 1, (x->shapes[3] + 2 * pad - filter->shapes[3]) / stride + 1};
     return tensor_create_values_deep(shape, 4, 0);
 }
 
@@ -150,7 +150,7 @@ void cnn_comput_conv3d_layer_dfilter(struct Tensor* dout, struct Tensor* x, int 
     //dout2_range = range(dout_shape[2])
     //dout3_range = range(dout_shape[3])
 
-    for(int dfilter_index = index * dfilter->size / max_index, dfilter_index_max = (index + 1) * dfilter->size / max_index; dfilter_index < dfilter_index_max; dfilter_index){
+    for(int dfilter_index = index * dfilter->size / max_index, dfilter_index_max = (index + 1) * dfilter->size / max_index; dfilter_index < dfilter_index_max; dfilter_index++){
         //for dfilter_index in range(index * len(dfilter_array) // max_index, (index + 1) * len(dfilter_array) // max_index):
         int x_tmp2 = dfilter_index / dfilter->shapes[3] % dfilter->shapes[2] - pad;
         //x_tmp2 = (dfilter_index // dfilter_shape[3] % dfilter_shape[2]) - pad

@@ -18,7 +18,6 @@ int cnn_activation_function_layer_initForward(struct cnn_Layer *layer){
 }
 
 int cnn_activation_function_layer_initBackward(struct cnn_Layer *layer){
-    struct Tensor* dout = layer->outLayer[0]->dx;
     if(layer->dx->shapes[0] != CNN_LAYER_DOUT(layer)->shapes[0]){
         tensor_release_deep(layer->dx);
         layer->dx = tensor_create_struct_deep(CNN_LAYER_DOUT(layer));

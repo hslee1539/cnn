@@ -6,6 +6,7 @@ struct cnn_UpdateSet* cnn_create_updateset(struct Tensor *delta, struct Tensor *
     newUpdateset->delta = delta;
     newUpdateset->value = value;
     newUpdateset->momnt = 0;
+    return newUpdateset;
 }
 void cnn_release_updateset_deep(struct cnn_UpdateSet *updateset){
     if(updateset->momnt != 0)

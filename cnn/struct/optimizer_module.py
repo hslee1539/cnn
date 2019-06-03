@@ -3,7 +3,7 @@ from import_lib import lib
 from cnn.struct.updatelist_module import UpdateList
 from ctypes import Structure, c_int, POINTER, c_float, CFUNCTYPE, c_void_p
 
-cnn_optimizer_fpUpdate = CFUNCTYPE(None, c_void_p, UpdateList, c_int, c_int)
+_cnn_optimizer_fpUpdate = CFUNCTYPE(c_void_p, UpdateList, c_int, c_int)
 
 class _Optimizer(Structure):
     _fields_ = [
@@ -11,8 +11,10 @@ class _Optimizer(Structure):
         # 원본은 c_void_p가 아닌, POINTER(_Optimizer)여야 하지만,
         # 파이썬은 c언어처럼 이름만 선언하는 기능이 없기 때문에
         # c_void_p로 받음.
-        ('update', cnn_optimizer_fpUpdate)
+        ('update', _cnn_optimizer_fpUpdate)
     ]
+
+cnn_optimizer_fpUpdate = CFUNCTYPE(POINTER(_Optimizer), UpdateList, c_int, c_int)
 
 def _getLearningRate(self):
     return self.contents.learning_raate

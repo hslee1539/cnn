@@ -11,6 +11,6 @@ void cnn_comput_relu_layer_backward(struct Tensor* dout, struct Tensor* out, str
     int dx_index = out->size * index / max_index;
     int dx_max_index = out->size * (index  + 1) / max_index;
     for(; dx_index < dx_max_index; dx_index++){
-        dx->scalas[dx_index] = dout->scalas[dx_index] * (out->scalas > 0);
+        dx->scalas[dx_index] = dout->scalas[dx_index] * (out->scalas[dx_index] > 0);
     }
 }

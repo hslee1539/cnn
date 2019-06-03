@@ -3,7 +3,9 @@
 //
 #include "./import_module.h"
 
+#include "./batchnorm_layer_module.c"
 #include "./conv3d_layer_module.c"
+#include "./deconv3d_layer_module.c"
 #include "./fully_connected_layer_module.c"
 #include "./meansquare_layer_module.c"
 #include "./relu_layer_module.c"

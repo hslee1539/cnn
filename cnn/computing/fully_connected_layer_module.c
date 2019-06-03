@@ -1,9 +1,16 @@
 #include "./fully_connected_layer_module.h"
+#include <malloc.h>
 
 /// 완전연결층의 연산결과를 저장할 tensor를 생성합니다.
 struct Tensor* cnn_create_fully_connected_out(struct Tensor* x, struct Tensor* w){
-    int shapes[] = {x->shapes[0], w->size / w->shapes[0]};
-    return tensor_create_values_deep(shapes, 2, 0.0f);
+    long long *tmpShapes = malloc(sizeof(long long) * w->dim);
+    tmpShapes[0] = x->shapes[0];
+    for(int i = 1; i < w->dim; i++){
+        tmpShapes[i] = w->shapes[i];
+    }
+    struct Tensor *returnValue = tensor_create_values_deep(tmpShapes, w->dim, 0.0f);
+    free(tmpShapes);
+    return returnValue;
 }
 
 /*
@@ -105,15 +112,16 @@ void cnn_comput_fully_connected_layer_backward(struct Tensor* dout, struct Tenso
     int product_index = 0;
     int pass_dout_index = 0;
     int pass_w_index = 0;
+    int w_row = w->size / w->shapes[0];
 
     float tmp = 0.0f;
 
     for (; dx_index < dx_index_max; dx_index++){
-        pass_dout_index = dx_index / w->shapes[0] * w->shapes[1];
-        pass_w_index = dx_index % w->shapes[0] * w->shapes[1];
+        pass_dout_index = dx_index / w->shapes[0] * w_row;
+        pass_w_index = dx_index % w->shapes[0] * w_row;
 
         tmp = 0;
-        for (product_index = 0; product_index < w->shapes[1]; product_index++){
+        for (product_index = 0; product_index < w_row; product_index++){
             tmp += dout->scalas[pass_dout_index + product_index] * w->scalas[pass_w_index + product_index];
         }
         dx->scalas[dx_index] = tmp;
@@ -126,14 +134,17 @@ void cnn_comput_fully_connected_layer_dw(struct Tensor* dout, struct Tensor* x, 
     int dw0 = 0;
     int x0 = 0;
 
+    int dw_row = dw->size / dw->shapes[0];
+    int x_row = x->size / x->shapes[0];
+
     float tmp = 0.0f;
 
     for(; dw_index < dw_index_max; dw_index++){
-        dw1 = dw_index % dw->shapes[1];
-        dw0 = dw_index / dw->shapes[1];
+        dw1 = dw_index % dw_row;
+        dw0 = dw_index / dw_row;
         tmp = 0;
         for(x0 = 0; x0 < x->shapes[0]; x0++)
-            tmp += x->scalas[x0 * x->shapes[1] + dw0] * dout->scalas[x0 * dw->shapes[1] + dw1];
+            tmp += x->scalas[x0 * x_row + dw0] * dout->scalas[x0 * dw_row + dw1];
         dw->scalas[dw_index] = tmp;
     }
 }

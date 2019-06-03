@@ -14,19 +14,19 @@ float gaussianRandom(void) {
     return v1 * s;
 }
 
-struct Tensor* tensor_create_gauss_deep(int *shapes, int dim, int seed){
+struct Tensor* tensor_create_gauss_deep(long long *shapes, int dim, int seed){
     int size = 1;
     for(int d = 0; d < dim; d++){
         size *= shapes[d];
     }
     struct Tensor* out = malloc(sizeof(struct Tensor));
-    out->shapes = malloc(sizeof(int) * dim);
+    out->shapes = malloc(sizeof(long long) * dim);
     out->scalas = malloc(sizeof(float) * size);
     out->information = tensor_INFROMATION_SCALAS_NEED_FREE | tensor_INFROMATION_SHAPES_NEED_FREE;
     out->size = size;
     out->dim = dim;
     
-    memcpy(out->shapes, shapes, dim * sizeof(int));
+    memcpy(out->shapes, shapes, dim * sizeof(long long));
     
     srand(seed);
     for(int i = 0; i < size; i++){
@@ -35,20 +35,20 @@ struct Tensor* tensor_create_gauss_deep(int *shapes, int dim, int seed){
     return out;
 }
 
-struct Tensor* tensor_create_random_deep(int *shapes, int dim, int seed, float min, float range){
+struct Tensor* tensor_create_random_deep(long long *shapes, int dim, int seed, float min, float range){
     int size = 1;
     for(int d = 0; d < dim; d++){
         size *= shapes[d];
     }
     struct Tensor* out = malloc(sizeof(struct Tensor));
-    out->shapes = malloc(sizeof(int) * dim);
+    out->shapes = malloc(sizeof(long long) * dim);
     out->scalas = malloc(sizeof(float) * size);
     out->information = tensor_INFROMATION_SCALAS_NEED_FREE | tensor_INFROMATION_SHAPES_NEED_FREE;
 
     out->size = size;
     out->dim = dim;
     
-    memcpy(out->shapes, shapes, dim * sizeof(int));
+    memcpy(out->shapes, shapes, dim * sizeof(long long));
     
     srand(seed);
     for(int i = 0; i < size; i++){

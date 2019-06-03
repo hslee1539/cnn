@@ -1,9 +1,10 @@
 #include "./meansquare_layer_module.h"
 
-#define JEGOP(x) x * x
+#define JEGOP(x) ((x) * (x))
 
 void cnn_comput_meansquare_layer_forward(struct Tensor* x, struct Tensor* table, struct Tensor* out, int index, int max_index){
     float tmp = 0;
+    out->scalas[0] = 0;
     for(int i = index * x->size / max_index, i_max = (index + 1) * x->size / max_index; i < i_max; i ++){
         tmp += JEGOP(table->scalas[i] - x->scalas[i]);
     }
@@ -14,8 +15,7 @@ void cnn_comput_meansquare_layer_forward(struct Tensor* x, struct Tensor* table,
 }
 
 void cnn_comput_meansquare_layer_backward(struct Tensor* x, struct Tensor* table, struct Tensor* dx, int index, int max_index){
-    float tmp = 0;
     for(int i = index * dx->size / max_index, i_max = (index + 1) * dx->size / max_index; i < i_max; i ++){
-        dx->scalas[i] = table->scalas[i] - x->scalas[i];
+        dx->scalas[i] = x->scalas[i] - table->scalas[i];
     }
 }

@@ -1,15 +1,15 @@
 #include <malloc.h>
 #include "./layer_module.h"
 
-struct cnn_Layer* cnn_create_layer(char *name, int inLayer_size, int outLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update){
+struct cnn_Layer* cnn_create_layer(char *name, int childLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update){
     struct cnn_Layer* returnValue = malloc(sizeof(struct cnn_Layer));
     returnValue->name = name;
     returnValue->out = tensor_create();
     returnValue->dx = tensor_create();
-    returnValue->inLayer = malloc(sizeof(struct cnn_Layer*) * inLayer_size);
-    returnValue->inLayer_size = inLayer_size;
-    returnValue->outLayer = malloc(sizeof(struct cnn_Layer*)* outLayer_size);
-    returnValue->outLayer_size = outLayer_size;
+    returnValue->inLayer = 0;
+    returnValue->outLayer = 0;
+    returnValue->childLayer = malloc(sizeof(struct cnn_Layer *) * childLayer_size);
+    returnValue->childLayer_size = childLayer_size;
     returnValue->forward = forward;
     returnValue->backward = backward;
     returnValue->initForward = initForward;
@@ -23,6 +23,10 @@ int cnn_release_layer_deep(struct cnn_Layer *layer){
         layer->release(layer);
     tensor_release_deep(layer->out);
     tensor_release_deep(layer->dx);
+    for(int i = 0; i < layer->childLayer_size; i++)
+        cnn_release_layer_deep(layer->childLayer[i]);
+    if(layer->childLayer_size > 0)
+        free(layer->childLayer);
     free(layer);
     return 0;
 }
@@ -53,17 +57,29 @@ int cnn_layer_update(struct cnn_Layer *layer, struct cnn_Optimizer *optimizer, i
     return 0;
 }
 
-int cnn_layer_link(struct cnn_Layer *layer, struct cnn_Layer *source){
-    struct cnn_Layer *target1 = layer;
-    struct cnn_Layer *target2 = layer;
-    // dataset은 0개이고, 나머지는 1개이고, 네트워크는 0개 이상을 가질 수 있음.
-    // 즉 inLayer_size가 2개 이상일 경우, layer->inLayer에 해당되는 레이어들과 layer와의 관계는 수평적 레이어 관계가 아닌 수직적 레이어 관계임.
-    while(target1->inLayer_size > 1){
-        target1 = target1->inLayer[0];
-    }
-    while(target2->outLayer_size > 1){
-        target2 = target2->outLayer[target2->outLayer_size - 1];
-    }
-    target1->inLayer[0] = source
-    target2->outLayer[target2->outLayer_size - 1] = source;
+struct cnn_Layer *cnn_layer_getLeftTerminal(struct cnn_Layer *layer){
+    while(layer->childLayer_size > 0)
+        layer = layer->childLayer[0];
+    return layer;
+}
+struct cnn_Layer *cnn_layer_getRightTerminal(struct cnn_Layer *layer){
+    while(layer->childLayer_size > 0)
+        layer = layer->childLayer[layer->childLayer_size - 1];
+    return layer;
+}
+int cnn_layer_link(struct cnn_Layer *left, struct cnn_Layer *right){
+    // 양방향 연결 리스트 알고리즘을 참고하세요!
+    left = cnn_layer_getRightTerminal(left);
+    right = cnn_layer_getLeftTerminal(right);
+    left->outLayer = right;
+    right->inLayer = left;
+    return 0;
+}
+
+struct cnn_Layer *cnn_layer_setLearningData(struct cnn_Layer *layer, struct cnn_Layer *data){
+    // output
+    cnn_layer_getRightTerminal(layer)->outLayer = data;
+    // input
+    cnn_layer_getLeftTerminal(layer)->inLayer = data;
+    return layer;
 }
