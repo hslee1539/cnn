@@ -3,6 +3,7 @@ import numpy as np
 import conv3d_module
 import time
 
+# 성능 테스트 실험 입니다.
 
 stride = 2
 pad = 1
