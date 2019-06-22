@@ -4,5 +4,5 @@
 
 #include "./../../layer_module.h"
 
-int cnn_activation_function_layer_initForward(struct cnn_Layer *layer);
-int cnn_activation_function_layer_initBackward(struct cnn_Layer *layer);
+void cnn_activation_function_layer_initForward(struct cnn_Layer *layer);
+void cnn_activation_function_layer_initBackward(struct cnn_Layer *layer);

@@ -12,12 +12,10 @@ struct Tensor* dout = layer->outLayer[0]->dx;
 struct Tensor* table = layer->outLayer[1]->dx;
 */
 
-int cnn_softmax_crossentropy_layer_forward(struct cnn_Layer *layer, int index, int max_index){
+void cnn_softmax_crossentropy_layer_forward(struct cnn_Layer *layer, int index, int max_index){
     cnn_comput_softmax_crossentropy_layer_forward(CNN_LAYER_X(layer), layer->out, index, max_index);
-    return 0;
 }
 
-int cnn_softmax_crossentropy_layer_backward(struct cnn_Layer *layer, int index, int max_index){
+void cnn_softmax_crossentropy_layer_backward(struct cnn_Layer *layer, int index, int max_index){
     cnn_comput_softmax_crossentropy_layer_backward(layer->out, CNN_LAYER_TABLE(layer), layer->dx, index, max_index);
-    return 0;
 }

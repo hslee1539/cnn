@@ -5,6 +5,6 @@
 // initBackward는 activation_function의 initBackward 사용
 //
 
-int cnn_meansquare_layer_forward(struct cnn_Layer *layer, int index, int max_index);
-int cnn_meansquare_layer_backward(struct cnn_Layer *layer, int index, int max_index);
-int cnn_meansquare_layer_initBackward(struct cnn_Layer *layer);
+void cnn_meansquare_layer_forward(struct cnn_Layer *layer, int index, int max_index);
+void cnn_meansquare_layer_backward(struct cnn_Layer *layer, int index, int max_index);
+void cnn_meansquare_layer_initBackward(struct cnn_Layer *layer);

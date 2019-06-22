@@ -9,8 +9,15 @@ def createNetworkLayer(size):
 def isNetworkLayer(layer):
     return lib.cnn_isNetworkLayer(layer)
 
+def networkNext(layer):
+    return lib.cnn_network_next(layer)
+
 lib.cnn_isNetworkLayer.argtypes = [Layer]
 lib.cnn_isNetworkLayer.restype = c_bool
 
 lib.cnn_create_network_layer.argtypes = [c_int]
 lib.cnn_create_network_layer.restype = Layer
+
+lib.cnn_network_next.argtypes = [Layer]
+lib.cnn_network_next.restype = c_int
+

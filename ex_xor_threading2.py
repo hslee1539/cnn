@@ -1,5 +1,6 @@
 import cnn_module as cnn
 import numpy as np
+import threading
 
 # 데이타
 X = np.array([[0,0], [0,1], [1,0], [1,1]], np.float32)
@@ -27,24 +28,6 @@ with cnn.NetworkBuilder() as builder:
     #builder.addReluLayer()
     builder.addSigmoidLayer()
     mainNetwork = builder.getNetwork()
-"""
-# builder의 도움이 없는 경우
-fc1 = cnn.createFullyConnectedLayer(W1, B1)
-sig1 = cnn.createSigmoidLayer()
-fc2 = cnn.createFullyConnectedLayer(W2, B2)
-sig2 = cnn.createSigmoidLayer()
-
-mainNetwork = cnn.createNetworkLayer(4)
-mainNetwork.childLayer[0] = fc1
-mainNetwork.childLayer[1] = sig1
-mainNetwork.childLayer[2] = fc2
-mainNetwork.childLayer[3] = sig2
-
-fc1.link(sig1) #mainNetwork.childLayer[0].link(mainNetwork.childLayer[1])
-sig1.link(fc2) #mainNetwork.childLayer[1].link(mainNetwork.childLayer[2])
-fc2.link(sig2) #mainNetwork.childLayer[2].link(mainNetwork.childLayer[3])
-"""
-
 
 # 위 네트워크 뒤에 손실 함수 레이어가 붙은 학습용 네트워크 생성
 with cnn.NetworkBuilder() as builder:
@@ -57,17 +40,30 @@ trainNetwork.setLearningData(dataLayer)
 trainNetwork.initForward()
 trainNetwork.initBackward()
 
+thread = cnn.Thread.create(2)
+thread.start()
 #학습
-for i in range(1):
+for i in range(5000):
     if(i % 1000 == 0):
         print(i, trainNetwork.out.scalas[0])
-    while(cnn.networkNext(trainNetwork.forward(0,1)) > 0):
-        pass
-    while(cnn.networkNext(trainNetwork.backward(0,1)) > 0):
-        pass
-    while(cnn.networkNext(trainNetwork.update(optimizer, 0, 1)) > 0):
-        pass
-
+    while(True):
+        #print(trainNetwork.extra.ints[0], mainNetwork.extra.ints[0])
+        thread.forward(trainNetwork)
+        if thread.networkNext(trainNetwork) > 0: continue
+        break
+    while(True):
+        #print(trainNetwork.extra.ints[0], mainNetwork.extra.ints[0])
+        thread.backward(trainNetwork)
+        if thread.networkNext(trainNetwork) > 0: continue
+        break
+    while(True):
+        #print(trainNetwork.extra.ints[0], mainNetwork.extra.ints[0])
+        thread.update(trainNetwork, optimizer)
+        if thread.networkNext(trainNetwork) > 0: continue
+        break
+    
+#thread.end()
+#thread.release()
 print('정답')
 for i in range(4):
     print(mainNetwork.out.scalas[i])

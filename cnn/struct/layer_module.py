@@ -3,11 +3,11 @@ from tensor.main_module import Tensor
 from cnn.struct.updatelist_module import UpdateList, UpdateSet
 from cnn.struct.extradata_module import ExtraData
 from cnn.struct.optimizer_module import Optimizer
-from ctypes import Structure, c_int, POINTER, c_float, c_char_p, c_void_p, CFUNCTYPE, cast
+from ctypes import Structure, c_int, POINTER, c_float, c_char_p, c_void_p, CFUNCTYPE, cast, c_ulonglong
 
-callback_init = CFUNCTYPE(c_int, c_void_p)
-callback_computing = CFUNCTYPE(c_int, c_void_p, c_int, c_int)
-callback_update = CFUNCTYPE(c_int, c_void_p, Optimizer, c_int, c_int)
+callback_init = CFUNCTYPE(None, c_void_p)
+callback_computing = CFUNCTYPE(None, c_void_p, c_int, c_int)
+callback_update = CFUNCTYPE(None, c_void_p, Optimizer, c_int, c_int)
 
 class _Layer(Structure):
     _fields_ = [
@@ -151,20 +151,23 @@ def _link(self, right):
 def _setLearningData(self, dataLayer):
     return lib.cnn_layer_setLearningData(self, dataLayer)
 
+    
+    
+
 lib.cnn_create_layer.argtypes = (c_char_p, c_int, c_int, callback_computing, callback_computing, callback_init, callback_init, callback_init, callback_update)
 lib.cnn_create_layer.restype = POINTER(_Layer)
 lib.cnn_release_layer_deep.argtypes = [POINTER(_Layer)]
 lib.cnn_release_layer_deep.restype = c_int
 lib.cnn_layer_forward.argtypes = [POINTER(_Layer), c_int, c_int]
-lib.cnn_layer_forward.restype = c_int
+lib.cnn_layer_forward.restype = POINTER(_Layer)
 lib.cnn_layer_backward.argtypes = (POINTER(_Layer), c_int, c_int)
-lib.cnn_layer_backward.restype = c_int
+lib.cnn_layer_backward.restype = POINTER(_Layer)
 lib.cnn_layer_initForward.argtypes = [POINTER(_Layer)]
-lib.cnn_layer_initForward.restype = c_int
+lib.cnn_layer_initForward.restype = POINTER(_Layer)
 lib.cnn_layer_initBackward.argtypes = [POINTER(_Layer)]
-lib.cnn_layer_initBackward.restype = c_int
+lib.cnn_layer_initBackward.restype = POINTER(_Layer)
 lib.cnn_layer_update.argtypes = (POINTER(_Layer), Optimizer, c_int, c_int)
-lib.cnn_layer_update.restype = c_int
+lib.cnn_layer_update.restype = POINTER(_Layer)
 lib.cnn_layer_getLeftTerminal.argtypes = [POINTER(_Layer)]
 lib.cnn_layer_getLeftTerminal.restype = POINTER(_Layer)
 lib.cnn_layer_getRightTerminal.argtypes = [POINTER(_Layer)]

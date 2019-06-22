@@ -4,3 +4,4 @@
 
 int cnn_isNetworkLayer(struct cnn_Layer *layer);
 struct cnn_Layer *cnn_create_network_layer(int size);
+int cnn_network_next(struct cnn_Layer *layer);

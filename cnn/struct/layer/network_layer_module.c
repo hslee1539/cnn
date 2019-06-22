@@ -12,3 +12,17 @@ struct cnn_Layer* cnn_create_network_layer(int size){
     cnn_network_layer_createInnerData(newLayer);
     return newLayer;
 }
+
+int cnn_network_next(struct cnn_Layer *layer){
+    if(cnn_isNetworkLayer(layer)){
+        int layer_index = CNN_NETWORK_LAYER_INDEX(layer);
+        int retval = cnn_network_next(layer->childLayer[layer_index]);
+        if(retval == 0){
+            CNN_NETWORK_LAYER_INDEX(layer)++;
+            if(CNN_NETWORK_LAYER_INDEX(layer) == layer->childLayer_size)
+                CNN_NETWORK_LAYER_INDEX(layer) = 0;
+        }
+        return retval + layer->childLayer_size - layer_index - 1;
+    }
+    return 0;
+}

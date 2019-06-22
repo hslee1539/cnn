@@ -27,24 +27,6 @@ with cnn.NetworkBuilder() as builder:
     #builder.addReluLayer()
     builder.addSigmoidLayer()
     mainNetwork = builder.getNetwork()
-"""
-# builder의 도움이 없는 경우
-fc1 = cnn.createFullyConnectedLayer(W1, B1)
-sig1 = cnn.createSigmoidLayer()
-fc2 = cnn.createFullyConnectedLayer(W2, B2)
-sig2 = cnn.createSigmoidLayer()
-
-mainNetwork = cnn.createNetworkLayer(4)
-mainNetwork.childLayer[0] = fc1
-mainNetwork.childLayer[1] = sig1
-mainNetwork.childLayer[2] = fc2
-mainNetwork.childLayer[3] = sig2
-
-fc1.link(sig1) #mainNetwork.childLayer[0].link(mainNetwork.childLayer[1])
-sig1.link(fc2) #mainNetwork.childLayer[1].link(mainNetwork.childLayer[2])
-fc2.link(sig2) #mainNetwork.childLayer[2].link(mainNetwork.childLayer[3])
-"""
-
 
 # 위 네트워크 뒤에 손실 함수 레이어가 붙은 학습용 네트워크 생성
 with cnn.NetworkBuilder() as builder:
@@ -58,15 +40,25 @@ trainNetwork.initForward()
 trainNetwork.initBackward()
 
 #학습
-for i in range(1):
+for i in range(10000):
     if(i % 1000 == 0):
         print(i, trainNetwork.out.scalas[0])
-    while(cnn.networkNext(trainNetwork.forward(0,1)) > 0):
-        pass
-    while(cnn.networkNext(trainNetwork.backward(0,1)) > 0):
-        pass
-    while(cnn.networkNext(trainNetwork.update(optimizer, 0, 1)) > 0):
-        pass
+
+    # 이전보다 개선된 버전
+    # 다중쓰레드에서 네트워크 단위로 forward나 backward 등을 비동기 실행 하면,
+    # 처리해야 하는 단말 노드를 가기 전에 networkNext가 처리되어 다음 노드를 처리하는
+    # 불상사가 생길 위험이 있음.
+    # 이를 해결하려면 forward나 기타 등등을 쓰래드가 완료될때 까지 대기하는 식의 동기
+    # 작업이 필요함.
+    # 이러면 비동기로 실행하고 다음 연산때 대기하고 완료 즉시 바로 연산을 하지 못함.
+    for layer in cnn.PyIterator(trainNetwork):
+        layer.forward(0,1)
+    
+    for layer in cnn.PyBackwardIterator(trainNetwork):
+        layer.backward(0,1)
+        
+    for layer in cnn.PyIterator(trainNetwork):
+        layer.update(optimizer, 0, 1)
 
 print('정답')
 for i in range(4):

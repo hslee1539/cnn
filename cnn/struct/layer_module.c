@@ -31,30 +31,30 @@ int cnn_release_layer_deep(struct cnn_Layer *layer){
     return 0;
 }
 
-int cnn_layer_forward(struct cnn_Layer *layer, int index, int max_index){
+struct cnn_Layer *cnn_layer_forward(struct cnn_Layer *layer, int index, int max_index){
     if(layer->forward)
-        return layer->forward(layer, index, max_index);
-    return 0;
+        layer->forward(layer, index, max_index);
+    return layer;
 }
-int cnn_layer_backward(struct cnn_Layer *layer, int index, int max_index){
+struct cnn_Layer *cnn_layer_backward(struct cnn_Layer *layer, int index, int max_index){
     if(layer->backward)
-        return layer->backward(layer, index, max_index);
-    return 0;
+        layer->backward(layer, index, max_index);
+    return layer;
 }
-int cnn_layer_initForward(struct cnn_Layer *layer){
+struct cnn_Layer *cnn_layer_initForward(struct cnn_Layer *layer){
     if(layer->initForward)
-        return layer->initForward(layer);
-    return 0;
+        layer->initForward(layer);
+    return layer;
 }
-int cnn_layer_initBackward(struct cnn_Layer *layer){
+struct cnn_Layer *cnn_layer_initBackward(struct cnn_Layer *layer){
     if(layer->initBackward)
-        return layer->initBackward(layer);
-    return 0;
+        layer->initBackward(layer);
+    return layer;
 }
-int cnn_layer_update(struct cnn_Layer *layer, struct cnn_Optimizer *optimizer, int index, int max_index){
+struct cnn_Layer *cnn_layer_update(struct cnn_Layer *layer, struct cnn_Optimizer *optimizer, int index, int max_index){
     if(layer->update)
-        return layer->update(layer, optimizer, index, max_index);
-    return 0;
+        layer->update(layer, optimizer, index, max_index);
+    return layer;
 }
 
 struct cnn_Layer *cnn_layer_getLeftTerminal(struct cnn_Layer *layer){

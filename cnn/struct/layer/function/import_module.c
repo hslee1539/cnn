@@ -3,6 +3,9 @@
 //
 #include "./import_module.h"
 
+// 특수 헤더 파일
+#include "./activation_function_layer_module.c"
+
 #include "./batchnorm_layer_module.c"
 #include "./conv3d_layer_module.c"
 #include "./deconv3d_layer_module.c"
@@ -14,5 +17,3 @@
 
 #include "./network_layer_module.c"
 
-// 특수 헤더 파일
-#include "./activation_function_layer_module.c"

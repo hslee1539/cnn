@@ -5,3 +5,4 @@
 #include "./optimizer_module.c"
 #include "./updatelist_module.c"
 #include "./updateset_module.c"
+#include "./iterator_module.c"
