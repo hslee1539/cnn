@@ -39,6 +39,7 @@ with cnn.NetworkBuilder() as builder:
 trainNetwork.setLearningData(dataLayer)
 trainNetwork.initForward()
 trainNetwork.initBackward()
+trainNetwork.initUpdate(optimizer)
 
 #학습
 for i in range(10000):

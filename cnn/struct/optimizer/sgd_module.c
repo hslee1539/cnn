@@ -9,5 +9,5 @@ void cnn_sgd_callback(struct cnn_Optimizer *optimizer, struct cnn_UpdateList *li
 }
 
 struct cnn_Optimizer *cnn_create_SGD(float learning_rate){
-    return cnn_create_optimizer(learning_rate, cnn_sgd_callback);
+    return cnn_create_optimizer(learning_rate, cnn_sgd_callback, 0);
 }

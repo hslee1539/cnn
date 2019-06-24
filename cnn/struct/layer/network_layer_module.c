@@ -8,7 +8,7 @@ int cnn_isNetworkLayer(struct cnn_Layer *layer){
 }
 
 struct cnn_Layer* cnn_create_network_layer(int size){
-    struct cnn_Layer* newLayer = cnn_create_layer(cnn_NETWORK_LAYER_NAME, size, cnn_network_layer_forward, cnn_network_layer_backward, cnn_network_layer_initForward, cnn_network_layer_initBackward, cnn_network_layer_releaseInnerData, cnn_network_layer_update);
+    struct cnn_Layer* newLayer = cnn_create_layer(cnn_NETWORK_LAYER_NAME, size, cnn_network_layer_forward, cnn_network_layer_backward, cnn_network_layer_initForward, cnn_network_layer_initBackward, cnn_network_layer_releaseInnerData, cnn_network_layer_update, _cnn_layer_baseInitUpdate);
     cnn_network_layer_createInnerData(newLayer);
     return newLayer;
 }

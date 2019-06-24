@@ -39,6 +39,7 @@ with cnn.NetworkBuilder() as builder:
 trainNetwork.setLearningData(dataLayer)
 trainNetwork.initForward()
 trainNetwork.initBackward()
+trainNetwork.initUpdate(optimizer)
 
 forwards = cnn.PyIterator(trainNetwork)
 backwards = cnn.PyBackwardIterator(trainNetwork)

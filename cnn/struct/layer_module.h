@@ -8,6 +8,7 @@ struct cnn_Layer;
 typedef void         (*cnn_layer_callback_init)      (struct cnn_Layer*);
 typedef void         (*cnn_layer_callback_computing) (struct cnn_Layer*, int, int);
 typedef void         (*cnn_layer_callback_update)    (struct cnn_Layer*, struct cnn_Optimizer*, int, int);
+typedef void (*cnn_layer_callback_initUpdate)(struct cnn_Layer *, struct cnn_Optimizer *);
 
 struct cnn_Layer{
     /// 레이어의 이름입니다. 레이어의 이름은 중복이 없는 것을 원칙으로 합니다.
@@ -39,10 +40,11 @@ struct cnn_Layer{
     cnn_layer_callback_init         release;
     /// 레이어가 업데이트 할때 호출됩니다.
     cnn_layer_callback_update       update;
+    cnn_layer_callback_initUpdate   initUpdate;
 };
 
 ///신경망을 만듭니다.
-struct cnn_Layer    *cnn_create_layer               (char *name, int childLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update);
+struct cnn_Layer    *cnn_create_layer               (char *name, int childLayer_size, cnn_layer_callback_computing forward, cnn_layer_callback_computing backward, cnn_layer_callback_init initForward, cnn_layer_callback_init initBackward, cnn_layer_callback_init release, cnn_layer_callback_update update, cnn_layer_callback_initUpdate initUpdate);
 
 ///레이어를 깊이 반환합니다.
 int                 cnn_release_layer_deep          (struct cnn_Layer *layer);
@@ -53,6 +55,7 @@ struct cnn_Layer *cnn_layer_backward              (struct cnn_Layer *layer, int 
 struct cnn_Layer *cnn_layer_initForward           (struct cnn_Layer *layer);
 struct cnn_Layer *cnn_layer_initBackward          (struct cnn_Layer *layer);
 struct cnn_Layer *cnn_layer_update                (struct cnn_Layer *layer, struct cnn_Optimizer *optimizer, int index, int max_index);
+struct cnn_Layer *cnn_layer_initUpdate            (struct cnn_Layer *layer, struct cnn_Optimizer *optimizer);
 /// 레이어의 왼쪽 터미널(말단) 레이어를 반환합니다.
 /// 만약 이 레이어가 말단 레이어면, 이 레이어를 반환합니다.
 struct cnn_Layer    *cnn_layer_getLeftTerminal      (struct cnn_Layer *layer);
@@ -65,3 +68,6 @@ int                 cnn_layer_link                  (struct cnn_Layer *left, str
 /// layer에 학습 데이터를 설정합니다.
 /// layer의 왼쪽 터미널 레이어의 inLayer로 데이터 레이어가 참조되고, 오른쪽 터미널의 outLayer에 데이터 레이어가 참조됩니다.
 struct cnn_Layer    *cnn_layer_setLearningData      (struct cnn_Layer *layer, struct cnn_Layer *data);
+
+
+void _cnn_layer_baseInitUpdate(struct cnn_Layer *layer, struct cnn_Optimizer *optimizer);

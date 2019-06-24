@@ -8,6 +8,7 @@ from ctypes import Structure, c_int, POINTER, c_float, c_char_p, c_void_p, CFUNC
 callback_init = CFUNCTYPE(None, c_void_p)
 callback_computing = CFUNCTYPE(None, c_void_p, c_int, c_int)
 callback_update = CFUNCTYPE(None, c_void_p, Optimizer, c_int, c_int)
+callback_initUpdate = CFUNCTYPE(None, c_void_p, Optimizer)
 
 class _Layer(Structure):
     _fields_ = [
@@ -25,7 +26,8 @@ class _Layer(Structure):
         ('initForward', callback_init),
         ('initBackward', callback_init),
         ('release', callback_init),
-        ('update', callback_update)
+        ('update', callback_update),
+        ('initUpdate', callback_initUpdate)
         ]
 
 def _getName(self):
@@ -118,8 +120,8 @@ def _getUpdate(self):
 def _setUpdate(self, value):
     self.contents.update = value
 
-def _create(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update):
-    return lib.cnn_create_layer(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update)
+def _create(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update, initUpdate):
+    return lib.cnn_create_layer(name, inLayer_size, outLayer_size, forward, backward, initForward, initBackward, release, update, initUpdate)
 
 def _release_deep(self):
     return lib.cnn_release_layer_deep(self)
@@ -139,6 +141,9 @@ def _initBackward(self):
 def _update(self, optimizer, index, max_index):
     return lib.cnn_layer_update(self, optimizer, index, max_index)
 
+def _initUpdate(self, optimizer):
+    return lib.cnn_layer_initUpdate(self, optimizer)
+
 def _getLeftTerminal(self):
     return lib.cnn_layer_getLeftTerminal(self)
 
@@ -154,7 +159,7 @@ def _setLearningData(self, dataLayer):
     
     
 
-lib.cnn_create_layer.argtypes = (c_char_p, c_int, c_int, callback_computing, callback_computing, callback_init, callback_init, callback_init, callback_update)
+lib.cnn_create_layer.argtypes = (c_char_p, c_int, c_int, callback_computing, callback_computing, callback_init, callback_init, callback_init, callback_update, callback_initUpdate)
 lib.cnn_create_layer.restype = POINTER(_Layer)
 lib.cnn_release_layer_deep.argtypes = [POINTER(_Layer)]
 lib.cnn_release_layer_deep.restype = c_int
@@ -168,6 +173,8 @@ lib.cnn_layer_initBackward.argtypes = [POINTER(_Layer)]
 lib.cnn_layer_initBackward.restype = POINTER(_Layer)
 lib.cnn_layer_update.argtypes = (POINTER(_Layer), Optimizer, c_int, c_int)
 lib.cnn_layer_update.restype = POINTER(_Layer)
+lib.cnn_layer_initUpdate.argtypes = (POINTER(_Layer), Optimizer)
+lib.cnn_layer_initUpdate.restype = POINTER(_Layer)
 lib.cnn_layer_getLeftTerminal.argtypes = [POINTER(_Layer)]
 lib.cnn_layer_getLeftTerminal.restype = POINTER(_Layer)
 lib.cnn_layer_getRightTerminal.argtypes = [POINTER(_Layer)]
@@ -187,6 +194,7 @@ Layer.backward = _backward
 Layer.initForward = _initForward
 Layer.initBackward = _initBackward
 Layer.update = _update
+Layer.initUpdate = _initUpdate
 Layer.getLeftTerminal = _getLeftTerminal
 Layer.getRightTerminal = _getRightTerminal
 Layer.link = _link
