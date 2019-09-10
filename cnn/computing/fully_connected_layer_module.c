@@ -1,7 +1,6 @@
 #include "./fully_connected_layer_module.h"
 #include <malloc.h>
 
-/// 완전연결층의 연산결과를 저장할 tensor를 생성합니다.
 struct Tensor* cnn_create_fully_connected_out(struct Tensor* x, struct Tensor* w){
     long long *tmpShapes = malloc(sizeof(long long) * w->dim);
     tmpShapes[0] = x->shapes[0];
