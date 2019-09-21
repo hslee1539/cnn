@@ -2,7 +2,7 @@ import sys
 import os
 import time
 
-main_c = './cnn/main_module.c'
+main_c = './cnn/import_module.c'
 
 print("cmd에서 실행해야 컴파일 에러 메세지를 볼 수 있습니다.")
 print("패키지를 컴파일 합니다...")
