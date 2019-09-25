@@ -1,5 +1,5 @@
 #pragma once
-#include "../../tensor/main_module.h"
+#include "../tensor/import_module.h"
 
 struct Tensor* cnn_create_fully_connected_out(struct Tensor* x, struct Tensor* w);
 

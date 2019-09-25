@@ -1,5 +1,5 @@
-from import_lib import lib
-from tensor.main_module import Tensor
+from cnn.import_lib import lib
+from cnn.tensor.struct.tensor_module import Tensor
 from cnn.struct.layer_module import Layer
 from cnn.struct.layer.batchnorm_layer_module import createBatchnormLayer
 from cnn.struct.layer.conv3d_layer_module import createConv3dLayer

@@ -1,5 +1,5 @@
-from import_lib import lib
-from tensor.main_module import *
+from cnn.import_lib import lib
+from cnn.tensor.struct.tensor_module import Tensor
 from ctypes import Structure, c_int, POINTER, c_float
 
 # Tensor는 POINTER(_Tensor) 임

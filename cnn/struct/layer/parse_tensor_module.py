@@ -1,4 +1,4 @@
-from tensor.main_module import Tensor
+from cnn.tensor.struct.tensor_module import Tensor
 import numpy as np
 
 def getTensor(value):

@@ -1,4 +1,4 @@
-from import_lib import lib
+from cnn.import_lib import lib
 from cnn.struct.updateset_module import UpdateSet
 from ctypes import Structure, c_int, POINTER, c_float
 

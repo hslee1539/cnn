@@ -1,5 +1,5 @@
-from import_lib import lib
-from tensor.main_module import Tensor
+from cnn.import_lib import lib
+from cnn.tensor.struct.tensor_module import Tensor
 from cnn.struct.updatelist_module import UpdateList, UpdateSet
 from cnn.struct.extradata_module import ExtraData
 from cnn.struct.optimizer_module import Optimizer

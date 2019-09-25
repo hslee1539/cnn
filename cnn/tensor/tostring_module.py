@@ -1,6 +1,6 @@
-from import_lib import lib
+from cnn.import_lib import lib
 from ctypes import Structure, POINTER, c_int, c_float, c_char
-from tensor.struct.tensor_module import Tensor
+from cnn.tensor.struct.tensor_module import Tensor
 
 # 여기서 Tensor는 POINTER(_Tensor) 임
 

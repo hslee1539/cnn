@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../tensor/main_module.h"
+#include "../tensor/import_module.h"
 
 struct cnn_ExtraData{
     int tensorSize;

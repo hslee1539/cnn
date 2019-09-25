@@ -1,5 +1,4 @@
-from import_lib import lib
-#from tensor.main_module import *
+from cnn.import_lib import lib
 from cnn.struct.updatelist_module import UpdateList
 from ctypes import Structure, c_int, POINTER, c_float, CFUNCTYPE, c_void_p
 

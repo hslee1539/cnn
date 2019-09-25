@@ -1,5 +1,4 @@
-from import_lib import lib
-#from tensor.main_module import *
+from cnn.import_lib import lib
 from cnn.struct.layer_module import Layer
 from cnn.struct.optimizer_module import Optimizer
 from ctypes import Structure, c_int, POINTER, c_float, c_ulong, CFUNCTYPE

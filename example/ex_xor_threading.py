@@ -1,4 +1,8 @@
-import cnn_module as cnn
+import sys, os
+
+sys.path += os.path.dirname(__file__) + "/../"
+
+import cnn.cnn_module as cnn
 import numpy as np
 import threading
 

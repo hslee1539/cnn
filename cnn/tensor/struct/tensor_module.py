@@ -1,4 +1,4 @@
-from import_lib import lib
+from cnn.import_lib import lib
 from ctypes import Structure, POINTER, c_longlong, c_float, c_int
 import numpy as np
 

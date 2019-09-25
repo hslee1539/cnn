@@ -1,5 +1,5 @@
-from import_lib import lib
-from tensor.main_module import Tensor
+from cnn.import_lib import lib
+from cnn.tensor.struct.tensor_module import Tensor
 from ctypes import Structure, c_int, POINTER, c_float
 
 class _ExtraData(Structure):
