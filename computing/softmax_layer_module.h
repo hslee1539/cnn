@@ -1,5 +1,5 @@
 #pragma once
-#include "../../tensor/main_module.h"
+#include "../tensor/import_module.h"
 
 // TODO gan을 고려해서 다른 네트워크랑 연결되게 짜기.
 

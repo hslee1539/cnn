@@ -1,5 +1,5 @@
 #pragma once
-#include "../../tensor/main_module.h"
+#include "../tensor/import_module.h"
 
 struct Tensor *cnn_create_deconv3d_layer_out(struct Tensor *x, struct Tensor *filter, int stride, int pad);
 
